@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#15112c">
-<title>Spin & Win Rewards</title>
+<title>Spin & Win Rewards Demo</title>
 <style>
 :root{--bg:#100d24;--panel:#1d1838;--text:#fff;--muted:#c6c0e3;--gold:#ffd166;--pink:#ff5c9a;--blue:#6c63ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#30205b,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
