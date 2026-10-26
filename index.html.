@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15112c">
+<title>Spin & Win Rewards</title>
+<style>
+:root{--bg:#100d24;--panel:#1d1838;--text:#fff;--muted:#c6c0e3;--gold:#ffd166;--pink:#ff5c9a;--blue:#6c63ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#30205b,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:520px;margin:auto;padding:20px 15px 40px}.brand{text-align:center;margin:8px 0 18px}.brand .emoji{font-size:36px}.brand h1{margin:4px 0;font-size:29px;letter-spacing:.2px}.brand p{margin:0;color:var(--muted);font-size:14px}
+.panel{background:rgba(29,24,56,.94);border:1px solid #413767;border-radius:20px;padding:17px;margin:14px 0;box-shadow:0 12px 35px #0002}
+label{display:block;font-size:13px;color:var(--muted);margin:0 0 7px}input{width:100%;background:#100d24;border:1px solid #514878;border-radius:12px;padding:13px;color:white;font-size:16px;outline:none}input:focus{border-color:var(--gold)}
+.wheel-wrap{position:relative;width:min(82vw,340px);margin:5px auto 14px;aspect-ratio:1}.wheel{width:100%;height:100%;border-radius:50%;border:8px solid #f9d66b;box-shadow:0 0 0 5px #49366e,0 12px 30px #0006;transition:transform 4.2s cubic-bezier(.12,.72,.08,1);background:conic-gradient(#ff6384 0deg 72deg,#f9c74f 72deg 144deg,#43aa8b 144deg 216deg,#5778ff 216deg 288deg,#9b5de5 288deg 360deg);position:relative;overflow:hidden}
+.wheel span{position:absolute;left:50%;top:50%;width:48%;height:24px;transform-origin:left center;text-align:right;padding-right:10px;font-weight:800;font-size:13px;color:#fff;text-shadow:0 1px 3px #333;display:flex;align-items:center;justify-content:flex-end}
+.pointer{position:absolute;z-index:2;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-top:34px solid white;filter:drop-shadow(0 3px 3px #0006)}
+.center{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:#fff;color:#24163e;border:6px solid #f9d66b;display:grid;place-items:center;font-weight:900;font-size:13px}
+button{border:0;border-radius:13px;padding:14px 16px;font-weight:800;font-size:16px;cursor:pointer}.spin{width:100%;color:#211436;background:linear-gradient(90deg,#ffd166,#ff9f68);box-shadow:0 5px 0 #b96b48}.spin:disabled{opacity:.6}.secondary{background:#302751;color:white;border:1px solid #5a4c83;padding:10px 12px;font-size:14px}.row{display:flex;gap:9px;align-items:center}.row>*{flex:1}.result{text-align:center;font-size:20px;font-weight:850;min-height:31px;color:var(--gold);margin:12px 0 2px}.small{font-size:12px;color:var(--muted);line-height:1.5}.section-title{margin:0 0 12px;font-size:17px}.history-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #40365f;padding:11px 0;font-size:14px}.history-item:first-of-type{border-top:0}.history-item small{display:block;color:var(--muted);margin-top:3px}.admin{display:none;margin-top:12px}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.admin-grid input{padding:10px}.admin-actions{display:flex;gap:8px;margin-top:12px}.notice{background:#292044;border-radius:12px;padding:10px;color:var(--muted);font-size:12px;margin-top:12px}
+</style>
+</head>
+<body><main>
+<header class="brand"><div class="emoji">🎡✨</div><h1>Spin & Win</h1><p>Try your luck • Demo rewards only</p></header>
+<section class="panel">
+<label for="player">Player name</label><input id="player" maxlength="24" placeholder="Enter your name" autocomplete="name">
+</section>
+<section class="panel">
+<div class="wheel-wrap"><div class="pointer"></div><div class="wheel" id="wheel"></div><div class="center">SPIN!</div></div>
+<button class="spin" id="spinBtn">🎯 SPIN THE WHEEL</button>
+<div class="result" id="result" aria-live="polite">Ready when you are!</div>
+<p class="small" style="text-align:center;margin-bottom:0">Results are random demo outcomes, not real money or guaranteed rewards.</p>
+</section>
+<section class="panel">
+<h2 class="section-title">🏆 Rewards history</h2><div id="history"><p class="small">Your spins will appear here on this phone.</p></div>
+<div class="row" style="margin-top:10px"><button class="secondary" id="clearHistory">Clear history</button><button class="secondary" id="adminBtn">Admin settings</button></div>
+<div id="admin" class="admin">
+<p class="small">Demo admin panel. PIN is <b>1234</b> by default. Change the PIN before sharing this demo. This PIN is not secure storage.</p>
+<label for="pin">Admin PIN</label><input id="pin" type="password" inputmode="numeric" placeholder="Enter PIN">
+<div id="adminControls" style="display:none;margin-top:12px">
+<p class="small">Set relative chances. Higher numbers mean more likely outcomes.</p>
+<div class="admin-grid">
+<div><label>₹5 chance</label><input id="w5" type="number" min="0" max="1000"></div>
+<div><label>₹10 chance</label><input id="w10" type="number" min="0" max="1000"></div>
+<div><label>₹50 chance</label><input id="w50" type="number" min="0" max="1000"></div>
+<div><label>₹100 chance</label><input id="w100" type="number" min="0" max="1000"></div>
+<div style="grid-column:1/-1"><label>Better Luck Next Time chance</label><input id="wlose" type="number" min="0" max="1000"></div>
+</div>
+<div class="admin-actions"><button class="secondary" id="saveWeights">Save chances</button><button class="secondary" id="changePin">Change PIN</button></div>
+</div>
+<div class="notice" id="adminMsg">Admin settings are stored only in this browser on this device.</div>
+</div>
+</section>
+<footer class="small" style="text-align:center">Spin & Win Rewards • Offline demo • No cash payouts</footer>
+</main>
+<script>
+const prizes=[
+ {label:"₹5",key:"w5",color:"#ff6384"},
+ {label:"₹10",key:"w10",color:"#f9c74f"},
+ {label:"₹50",key:"w50",color:"#43aa8b"},
+ {label:"₹100",key:"w100",color:"#5778ff"},
+ {label:"Better Luck Next Time",key:"wlose",color:"#9b5de5"}
+];
+const defaults={w5:35,w10:25,w50:12,w100:3,wlose:25};
+let weights=JSON.parse(localStorage.getItem("sw_weights")||"null")||defaults;
+let history=JSON.parse(localStorage.getItem("sw_history")||"[]");
+let pinCode=localStorage.getItem("sw_pin")||"1234";
+const wheel=document.getElementById("wheel"), spinBtn=document.getElementById("spinBtn"), result=document.getElementById("result");
+let rotation=0, spinning=false;
+function drawWheel(){
+ wheel.innerHTML="";
+ const labels=[ "₹5","₹10","₹50","₹100","Better Luck" ];
+ labels.forEach((txt,i)=>{const s=document.createElement("span");s.textContent=txt;s.style.transform=`rotate(${i*72+36}deg) translateY(-50%)`;s.style.marginTop="-12px";s.style.fontSize=txt==="Better Luck"?"11px":"14px";wheel.appendChild(s)});
+}
+function saveHistory(){localStorage.setItem("sw_history",JSON.stringify(history));renderHistory()}
+function renderHistory(){
+ const el=document.getElementById("history");
+ if(!history.length){el.innerHTML='<p class="small">Your spins will appear here on this phone.</p>';return}
+ el.innerHTML=history.slice(0,20).map(h=>`<div class="history-item"><div><b>${escapeHtml(h.name)}</b><small>${escapeHtml(h.date)}</small></div><b>${escapeHtml(h.prize)}</b></div>`).join("");
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function pickPrize(){
+ let total=prizes.reduce((s,p)=>s+Math.max(0,Number(weights[p.key])||0),0);
+ if(total<=0)return prizes[4];
+ let n=Math.random()*total;
+ for(const p of prizes){n-=Math.max(0,Number(weights[p.key])||0);if(n<0)return p}
+ return prizes[4];
+}
+spinBtn.addEventListener("click",()=>{
+ if(spinning)return;
+ const name=document.getElementById("player").value.trim();
+ if(!name){result.textContent="Enter your name first!";document.getElementById("player").focus();return}
+ spinning=true;spinBtn.disabled=true;result.textContent="Spinning…";
+ const prize=pickPrize();
+ const slot=prizes.indexOf(prize);
+ // Land the selected prize segment under the pointer after several full turns.
+ const desired=(360-(slot*72+36)+360)%360;
+ const current=((rotation%360)+360)%360;
+ const target=360*5+((desired-current+360)%360);
+ rotation+=target;
+ wheel.style.transform=`rotate(${rotation}deg)`;
+ setTimeout(()=>{
+   result.textContent=prize.label==="Better Luck Next Time"?"Better luck next time!":`You got ${prize.label}!`;
+   history.unshift({name,prize:prize.label,date:new Date().toLocaleString()});
+   saveHistory();spinning=false;spinBtn.disabled=false;
+ },4300);
+});
+document.getElementById("clearHistory").addEventListener("click",()=>{
+ if(confirm("Clear all spin history on this phone?")){history=[];saveHistory()}
+});
+const admin=document.getElementById("admin");
+document.getElementById("adminBtn").addEventListener("click",()=>{admin.style.display=admin.style.display==="block"?"none":"block"});
+document.getElementById("pin").addEventListener("input",e=>{
+ if(e.target.value===pinCode){document.getElementById("adminControls").style.display="block";document.getElementById("adminMsg").textContent="Admin unlocked for this session.";loadWeights()}
+ else{document.getElementById("adminControls").style.display="none";document.getElementById("adminMsg").textContent="Enter the correct demo PIN to unlock settings."}
+});
+function loadWeights(){for(const p of prizes)document.getElementById(p.key).value=weights[p.key]??0}
+document.getElementById("saveWeights").addEventListener("click",()=>{
+ const next={};for(const p of prizes)next[p.key]=Math.max(0,Math.min(1000,Number(document.getElementById(p.key).value)||0));
+ if(Object.values(next).every(v=>v===0)){alert("At least one chance must be greater than zero.");return}
+ weights=next;localStorage.setItem("sw_weights",JSON.stringify(weights));document.getElementById("adminMsg").textContent="Chances saved on this phone."
+});
+document.getElementById("changePin").addEventListener("click",()=>{
+ const next=prompt("Enter a new demo PIN (at least 4 characters):");
+ if(next&&next.trim().length>=4){pinCode=next.trim();localStorage.setItem("sw_pin",pinCode);document.getElementById("pin").value="";document.getElementById("adminControls").style.display="none";document.getElementById("adminMsg").textContent="PIN changed on this phone."}
+ else if(next!==null)alert("PIN must have at least 4 characters.");
+});
+drawWheel();renderHistory();
+</script></body></html>
